@@ -1,0 +1,247 @@
+---
+title: "Classical Test Theory in R"
+format: html
+toc-expand: true
+toc-location: left
+toc-depth: 3
+editor: visual
+authors: Caroline Sutton Chubb and Hannah Scarbrough 
+---
+
+```{r global-options, echo = FALSE }
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+# Classical Test Theory in R: A Demonstration of Item Analysis Packages
+
+# Introduction
+
+## Classical Test Theory and Item Analysis
+
+Classical Test Theory (CTT) states that the observed score, or the score a student receives on a test, is comprised of the raw score and a measure of random error (Traub, 1997). The foundation of CTT was established throughout the 1900's and researchers have continued to expand on those principles (Urbina, 2014). CTT contrasts with Item Response Theory (IRT) in that CTT analyzes the whole test, rather than focusing on specific items and how individual test takers interact with the items.
+
+Item analysis uses qualitative and quantitative methods to analyze items on a test. Quantitative methods use statistical analysis to evaluate the instruments for their difficulty, discrimination, and reliability (Urbina, 2014). Item analysis is one step in establishing the validity of a test. Item analysis is typically one of the last steps in the process of developing a test or questionnaire and conducted using pilot data (Artino et al., 2014). Through item analysis, test items are evaluated and added, modified, or removed and re-analyzed as needed to until the test is deemed satisfactory (Urbina, 2014). Ultimately, these processes should improve tests.
+
+## Defining Item Analysis Terms
+
+Item analysis, as previously mentioned, several elements make up item analysis.  These are defined below.
+
+**Item difficulty** indicates what proportion of test takers answer an item correctly and is commonly reported as the p value. A higher p value would signify the item is easier, while an item with a low p value would be more difficult.
+
+**Item discrimination** indicates how well an item can discriminate between low ability and high ability test takers based on the construct being studied. Discrimination is measured with a value between -1.00 and 1.00. A low value suggests that the item does not effectively discriminate between test takers while a negative value would indicate that the item inversely discriminates and should be eliminated in most cases.
+
+**Item total correlation** is the correlation of performance on a test with the total score.  According to our lectures, negative values should indicate that the item is negatively related to other items and should therefore be discarded or revised.
+
+**Reliability** refers to the consistency of a measure but does not infer meaning or validity. This is typically measured using Cronbach's Alpha, though other measures are increasing in popularity such as McDonald's Omega. Reliability is necessary for a test to valid, but validity is not required for reliability. For example, test writers and administrators would want consistent results if they were to administer the test to the same group of people, multiple times. If there was a lot of variability in the results (outside of some normal error margin) the test would not be reliable and would need to be rewritten. This paper will use *Cronbach's Alpha* when discussing reliability.
+
+**Validity** refers to how well the test items accurately measure the purpose and intended use of the test and a test must be validated for each intended purpose of the test. For example, if the test is intended to measure math ability, but test questions required the taker to have knowledge of certain science concepts, the test would have low validity. Validity also refers to how test scores are interpreted. For example, a test designed for job aptitude, would not be valid for college admissions. Validation requires evidence collection to be statistically measured. According to the Standards for Education and Psychological Testing (2014), validity of the test is connected to the validity of the use of the test scores.  This standard considers the scientific use of test and test validation. The argument is that validity is unitary -- a combination of evidence or factors put together.  That is, validity includes evidence on test content, response process, internal structures, and relations to other measures. This is a shift from previous definitions (before 2015), which determined different types of validity.
+
+## Software in Item Analysis 
+
+Different software is available to conduct this type of analysis, including SPSS, Microsoft Excel, SAS, and others (Gotzmann & Bahry, 2012; Li, 2006).  We particularly focus on R statistical programing (R Core Team, 2023), which is a free software used for computing and graphics.  One of the many advantages of R is that it is free and open-source and uses packages to conduct different statistical analysis.
+
+However, this open framework also means that there are many different options of packages and syntax used to conduct similar analysis, such as item analysis. While there are many R packages out there for conducting an item analysis, the specific functions and returned results are different and documentation outlining the formulas can be difficult to find. **The purpose of this paper is to provide a demonstration of using item analysis in R, demonstrating its use with 3 different packages, and providing recommendations on what packages to use**.  
+
+# Dataset
+
+The data we selected comes from a reasoning test administered to African American students in an urban setting.  The test looks at general reasoning skills of children and their understanding about biology, and their understanding of biological phenomena, which is referred to as naïve biology (Waxman, Medin, & Ross, 2007). The data was collected from 133 pre-school and pre-K students.  For this demonstration, we focused on 16 questions relating to test-takers performance on an anthropocentric measure (*anthro)*.  The questions are coded as dichotomous items, where 0 is not an anthropocentric response, and 1 is an anthropocentric response. A test takers total score would indicate how many items were correctly identified, for a total possible score of 16. Total scores are included in the dataset.
+
+## Loading and Cleaning Data
+
+Data was loaded and subset to include only the variables of focus (anthro_1 through anthro_16) using the select() function from the *tidyverse* package (Wickham et al., 2019). No re-coding or other steps were required to clean the data for this demonstration.
+
+```{r load-data}
+library(tidyverse)
+
+data <- read.csv("data/ChildData_filtered_FINAL.csv")
+child_data <- data %>%
+  select(16:31)
+# rename variables 
+names(child_data) <- lapply(names(child_data), function(x) {
+  if(grepl("anthro_", x)) {
+    paste0("Item_", gsub("anthro_", "", x))
+  } else {
+    x
+  }
+})
+
+child_data <- as.data.frame(child_data)
+```
+
+## Summary Statistics
+
+describe(), is function from the *psych* package, which will be used to demonstrate item analysis below. This was used to produce descriptive statistics to check the data. This function provides a table with a variety of descriptive statistics that are useful in evaluating test items.
+
+```{r}
+library(psych)
+describe(child_data)
+```
+
+# Demonstration
+
+We have selected *CTT* (Willse, 2018), *psych* (Revelle, 2023), and *itemanalysis* (Zopluoglu, 2022) packages in the R program (v4.3.2; R Core Team, 2023). The *CTT* package was selected by recommendation of peers, and it is frequently used to conduct basic CTT analyses. The *psych* package was selected for its frequent use and variety of functions in both CTT and IRT (Schumacker, 2019). The *itemanalysis* package was selected because it had been presented to the authors as a viable option during coursework.
+
+While not covered in this demonstration, we are also aware of other packages, such as *psychometric*, *ICC*, as well as the CTT shiny app.
+
+## *CTT*
+
+### Load Package
+
+The CTT package was loaded using the library() function. The itemAnalysis() function, part of the *CTT* package, was used to produce the CTT analyses.
+
+```{r}
+#if not previously installed, use install.packages()
+#install.packages(CTT)
+library(CTT)
+```
+
+### Results
+
+In order to view all of the output produced by the itemAnalysis() function, the results need to be stored in an object using the "\<-" storage operator from Base R. In this example, we stored the results into an object called "IA." This object is called again to produce the **Cronbach's Alpha**, calculated with this package as 0.941.
+
+```{r load-CTT}
+IA <- itemAnalysis(child_data, itemReport=TRUE)
+IA
+```
+
+By storing the output in an object, you then view the results for the test items separately, using the convention, 'object_name\$itemReport' (in this example, IA\$itemReport). This produces a table with four statistics for each test item including, item mean ([*itemMean*]{.underline}), item total correlations (*pBis*), and the alpha value if the item were removed (alphaIfDeleted).
+
+```{r inspect-itemreport}
+IA$itemReport
+```
+
+While the *CTT* package does not identify item difficulty specifically, this information is provided via the mean. The item mean value is equal to the p value since there are only two possible responses (1 or 0). *CTT* also calculates the item total correlation which can be used to determine the discrimination index of each item.
+
+```{r difficulty-discrimination}
+#Mean
+IA$itemReport[, c("itemName","itemMean")]
+
+# Average difficulty 
+mean(IA$itemReport[, c("itemMean")])
+
+# Correlation
+IA$itemReport[,c("itemName","pBis")]
+```
+
+### Interpretation
+
+Looking at the table above, we are able to interpret item discrimination and item difficulty.
+
+Item difficulty ranges from 0.33 to 0.64. The easiest item is Item 10 (p=0.328), and the hardest item is Item 1 (p=0.641). The average difficulty is 0.433, which would indicate an easy to moderate difficulty on the overall test.
+
+For item correlation, negative values would indicate that hte item is begatively related to other items and should be discarded or revised. Similarly, low values should also be investigated. Based on this data set, item correlation ranges from 0.20 to 0.796. There are no negative values, but Item 1 is relatively low, with a correlation of 0.20, suggesting that this item needs further investigation from a content expert.
+
+Since this package does not specifically calculate discrimination, we infer discrimination by looking at correlation. We would determine that Item 1does not provide sufficient discrimination between test takers. Alternatively, Item 2 is a much better discriminator with a value of 0.69.
+
+## *pysch*
+
+### Load Package
+
+The *psych* package was loaded using the library() function of Base R.
+
+Note this package was previously loaded to calculate the summary statistics. We repeat this step here specifically for item analysis.
+
+```{r load-psych}
+#if not previously installed, use install.packages()
+#install.packages(psych)
+library(psych)
+```
+
+### Results
+
+The function alpha() was used to produce a variety of statistics to review the reliability, difficulty, and discrimination of the test items. This function produces five tables of results, which will be described separately.
+
+```{r psych-analysis}
+# Store results
+alpha_results <- alpha(child_data, warnings = FALSE)
+
+# inspect different result outputs
+str(alpha_results)
+```
+
+We first look at the frequencies of responses for each test item. For example, the frequency of correct responses for Item 1 is 0.64 or 64%.
+
+```{r frequencies}
+alpha_results$response.freq
+
+```
+
+The second table provides results for the set of test items as a whole. In this case **Cronbach's Alpha** is calculated at 0.9414 (*raw_alpha*) and is described in the documentation as the "alpha based upon the covariances." This table also provides the standardized alpha based on the correlations (*std.alpha*).
+
+```{r reliability}
+alpha_results$alpha.drop
+
+```
+
+The table that provides most of the information is item.stats. Correlation is displayed in the *r.cor* column, which looks at the item whole correlation corrected for item overalp and scale reliability, and r.drop, Item whole correlation corrected for item overlap and scale reliability. We can also see the mean (difficulty) of items. We infer discrimination by looking at the correlation of the item score against the total score on the exam.
+
+```{r item-stat}
+alpha_results$item.stats
+```
+
+### Interpretation
+
+We compare these results with the CTT package for cross-validation, and achieve similar results/interpretations.
+
+Looking at the Item Stat table, we find that the hardest item was Item 1 (p =0.64), and the easiest was Item 10 (p= 0.32). We see some discrepancy with the item correlation, but achieve similar results as seen in the previous package. *r.drop* is closest to *CTT's* PBis values. We find that Item 1 is an outlier, and may need further investigation.
+
+## ItemAnalysis
+
+### Load Package
+
+The *itemanalysis* package was loaded using the library() function of Base R.
+
+```{r}
+#install.packages(itemanalysis)
+library(itemanalysis)
+```
+
+### Results
+
+We create an object for the model, item.analysis, which primarily focused on the output called *item.stat*, which gives us a matrix of basic item statistics, such as item difficulty, item threshold, point-biserial, and biserial.
+
+```{r itemanalysis, message=FALSE, warning=FALSE}
+# create key for dichotomous items
+key = c("1","1", "1","1","1","1","1","1","1","1","1","1","1","1","1","1")
+
+#Create an object for the model 
+item.analysis <- itemanalysis1(data=child_data, key= key, options = c("A", "B"), correction = TRUE,
+span.par=.3, verbose = F)
+
+item.analysis$item.stat
+```
+
+In our case, we are interested in looking at the column marked point-biserial. Point-biserial is a special case of the Pearson Correlation and is used when you want to measure the relationship between a continuous variable and a dichotomous variable, or one that has two values (Daines, 2023). This matches our dataset, which only includes 0 and 1, correct and incorrect responses. Krishnan (2013) argues that it can be used to assess item discrimination as it allows for an understanding of the relationship between the score on an item against the whole test. *Itemanalysis* package does not calculate the overall alpha.
+
+### Interpretation
+
+Our evaluation of this table is consistent with interpretations in the previous sections.
+
+# Comparison and Recommendation
+
+While we would argue that you should be able to use one package to conduct item analysis, we find that this may not be the case. This can depend on the type of data you have (dichotomous tests or not), and what you are most interested in evaluating.  For our demonstration, we were primarily concerned with 1. How easy it was to use; 2. How much documentation was available; 3. How transparent were the calculations; and 4. How comprehensive were the outputs.
+
+# References
+
+Artino, A. R., La Rochelle, J. S., Dezee, K. J., & Gehlbach, H. (2014). Developing questionnaires for educational research: AMEE Guide No. 87. *Medical Teacher*, *36*(6), 463--474. https://doi.org/10.3109/0142159X.2014.889814
+
+Gotzmann, A., & Bahry, L. M. (2012). Review of "jMetrik." *Journal of Research & Practice in Assessment*. https://www.rpajournal.com/review-of-jmetrik/
+
+Li, Y. (2006). Using the open-source statistical language R to analyze the dichotomous Rasch model. *Behavior Research Methods*, *38*(3), 532--541. https://doi.org/10.3758/BF03192809
+
+Schumacker, R. (2019). Psychometric Packages in R. *Measurement: Interdisciplinary Research and Perspectives*, *17*(2), 106--112. https://doi.org/10.1080/15366367.2018.1544434
+
+R Core Team (2023). *R: A Language and Environment for Statistical Computing*. R  Foundation for Statistical Computing, Vienna, Austria. \<https://www.R-project.org/\>.
+
+Revelle, W. (2023). *psych: Procedures for Psychological, Psychometric, and Personality Research*. Northwestern University, Evanston, Illinois. R package version 2.3.9, [https://CRAN.R-project.org/package=psych](https://cran.r-project.org/package=psych).
+
+Traub, R. E. (1997). Classical Test Theory in Historical Perspective. *Educational Measurement: Issues and Practice*, *16*(4), 8--14.
+
+Urbina, S. (2014). *Essentials of psychological testing* (Second edition.). Wiley.
+
+Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). "Welcome to the tidyverse." Journal of Open Source Software, 4(43), 1686. doi:10.21105/joss.01686.
+
+Willse JT (2018). \_CTT: Classical Test Theory Functions\_. R package version 2.3.3, \<https://CRAN.R-project.org/package=CTT\>.
+
+Zopluoglu, C (2022). *itemanalysis: Classical Test Theory Item Analysis*. R package version 1.1, https://CRAN.R-project.org/package=itemanalysis\>.

@@ -1,0 +1,23 @@
+---
+title: "psych Package"
+---
+Loading Packages
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(CTT)
+```
+
+Loading and Cleaning Data
+```{r, loading-cleaning-data}
+data <- read.csv("data/ChildData_filtered_FINAL.csv")
+child_data <- data %>%
+  select(16:31)
+```
+
+
+Item Analysis
+```{r, alpha}
+IA <- itemAnalysis(child_data, itemReport=TRUE)
+IA
+IA$itemReport
+```

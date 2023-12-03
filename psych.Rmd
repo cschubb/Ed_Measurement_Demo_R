@@ -1,0 +1,53 @@
+---
+title: "psych Package"
+---
+Loading Packages
+```{r, loading-packages}
+library(tidyverse)
+library(psych)
+```
+
+Loading and Cleaning Data
+```{r, loading-cleaning-data}
+data <- read.csv("data/ChildData_filtered_FINAL.csv")
+child_data <- data %>%
+  select(16:31)
+```
+
+Summary Statistics
+```{r}
+describe(child_data)
+```
+
+Calculating Alpha
+```{r, alpha}
+alpha(child_data)
+
+# (difficulty) Output one (Frequencies of correct answer) is item difficulty
+
+# (item total correlation) raw_alpha is alpha based on covariences
+
+# (discrimination) std.r is the correlation of each item with the total score (not corrected for item overlap) if the items were all standardized
+
+# r.drop - Item whole correlation for this item against the scale without this item
+```
+
+Item Analysis
+I am not sure that any of this is necessary since we have 3 packages to compare and validate across. Keeping it for reference, but i don't think it belongs in the final version.
+```{r, item-analysis}
+#Difficulty
+item_diff <- colMeans(child_data)
+item_diff
+
+# Discrimination
+n_items <- ncol(child_data)        # number of items
+total_score <- rowSums(child_data) # total score
+
+item_disc <- numeric(n_items)                  # output vector
+for (j in 1:n_items) {                          # sequence
+  item_disc[j] <- cor(total_score, child_data[, j])    # body
+}
+
+item_disc
+```
+

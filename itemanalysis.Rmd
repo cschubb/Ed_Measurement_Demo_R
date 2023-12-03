@@ -1,0 +1,34 @@
+---
+title: "Itemanalysis Package"
+---
+Loading Packages
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(itemanalysis)
+```
+
+Loading and Cleaning Data
+```{r, loading-cleaning-data}
+data <- read.csv("data/ChildData_filtered_FINAL.csv")
+child_data <- data %>%
+  select(16:31)
+```
+
+
+# Item Analysis
+We are interested in looking at item.stat, which will look at basic item statistics. 
+
+```{r, item-analysis}
+# create key for dichotomous items
+key = c("1","1", "1","1","1","1","1","1","1","1","1","1","1","1","1","1")
+
+
+#Create an object for the model 
+item.analysis <- itemanalysis1(data=child_data, key= key, options = c("A", "B"), correction = TRUE,
+span.par=.3, verbose = T)
+
+# Difficulty on first column
+item.analysis$item.stat
+  
+```
+
