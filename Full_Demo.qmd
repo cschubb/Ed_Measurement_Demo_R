@@ -2,6 +2,7 @@
 title: "Classical Test Theory in R"
 format:
   html:
+    theme: journal
     toc: true
     toc-expand: true
     toc-location: left
@@ -41,7 +42,7 @@ Item analysis, as previously mentioned, several elements make up item analysis.�
 
 ## Software in Item Analysis 
 
-Different software is available to conduct this type of analysis, including SPSS, Microsoft Excel, SAS, and others (Gotzmann & Bahry, 2012; Li, 2006).  We particularly focus on R statistical programing (R Core Team, 2023), which is a free software used for computing and graphics.  One of the many advantages of R is that it is free and open-source and uses packages to conduct different statistical analysis.
+Different software is available to conduct this type of analysis, including SPSS, Microsoft Excel, SAS, and others (Gotzmann & Bahry, 2012; Li, 2006).  We particularly focus on R statistical programming (R Core Team, 2023), which is a free software used for computing and graphics.  One of the many advantages of R is that it is free and open-source and uses packages to conduct different statistical analysis.
 
 However, this open framework also means that there are many different options of packages and syntax used to conduct similar analysis, such as item analysis. While there are many R packages out there for conducting an item analysis, the specific functions and returned results are different and documentation outlining the formulas can be difficult to find. **The purpose of this paper is to provide a demonstration of using item analysis in R, demonstrating its use with 3 different packages, and providing recommendations on what packages to use**.  
 
@@ -51,7 +52,7 @@ The data we selected comes from a reasoning test administered to African America
 
 ## Loading and Cleaning Data
 
-Data was loaded and subset to include only the variables of focus (anthro_1 through anthro_16) using the select() function from the *tidyverse* package (Wickham et al., 2019). No re-coding or other steps were required to clean the data for this demonstration.
+Data was loaded and subset to include only the variables of focus (anthro_1 through anthro_16) using the `select()` function from the *tidyverse* package (Wickham et al., 2019). No re-coding or other steps were required to clean the data for this demonstration.
 
 ```{r load-data}
 library(tidyverse)
@@ -73,7 +74,7 @@ child_data <- as.data.frame(child_data)
 
 ## Summary Statistics
 
-describe(), is function from the *psych* package, which will be used to demonstrate item analysis below. This was used to produce descriptive statistics to check the data. This function provides a table with a variety of descriptive statistics that are useful in evaluating test items.
+`describe()` is a function from the *psych* package, which will be used to demonstrate item analysis below. This was used to produce descriptive statistics to check the data. This function provides a table with a variety of descriptive statistics that are useful in evaluating test items.
 
 ```{r}
 library(psych)
@@ -90,7 +91,7 @@ While not covered in this demonstration, we are also aware of other packages, su
 
 ### Load Package
 
-The CTT package was loaded using the library() function. The itemAnalysis() function, part of the *CTT* package, was used to produce the CTT analyses.
+The CTT package was loaded using the `library()` function. The `itemAnalysis()` function, part of the *CTT* package, was used to produce the CTT analyses.
 
 ```{r}
 #if not previously installed, use install.packages()
@@ -100,7 +101,7 @@ library(CTT)
 
 ### Results
 
-In order to view all of the output produced by the itemAnalysis() function, the results need to be stored in an object using the "\<-" storage operator from Base R. In this example, we stored the results into an object called "IA." This object is called again to produce the **Cronbach's Alpha**, calculated with this package as 0.941.
+In order to view all of the output produced by the `itemAnalysis()` function, the results need to be stored in an object using the `<-` storage operator from Base R. In this example, we stored the results into an object called "IA." This object is called again to produce the **Cronbach's Alpha**, calculated with this package as 0.941.
 
 ```{r load-CTT}
 IA <- itemAnalysis(child_data, itemReport=TRUE)
@@ -140,9 +141,11 @@ Since this package does not specifically calculate discrimination, we infer disc
 
 ### Load Package
 
-The *psych* package was loaded using the library() function of Base R.
+The *psych* package was loaded using the `library()` function of Base R.
 
-Note this package was previously loaded to calculate the summary statistics. We repeat this step here specifically for item analysis.
+::: callout-note
+This package was previously loaded to calculate the summary statistics. We repeat this step here specifically for item analysis
+:::
 
 ```{r load-psych}
 #if not previously installed, use install.packages()
@@ -152,7 +155,7 @@ library(psych)
 
 ### Results
 
-The function alpha() was used to produce a variety of statistics to review the reliability, difficulty, and discrimination of the test items. This function produces five tables of results, which will be described separately.
+The function `alpha()` was used to produce a variety of statistics to review the reliability, difficulty, and discrimination of the test items. This function produces five tables of results, which will be described separately.
 
 ```{r psych-analysis}
 # Store results
@@ -192,7 +195,7 @@ Looking at the Item Stat table, we find that the hardest item was Item 1 (p =0.6
 
 ### Load Package
 
-The *itemanalysis* package was loaded using the library() function of Base R.
+The *itemanalysis* package was loaded using the `library()` function of Base R.
 
 ```{r}
 #install.packages(itemanalysis)
@@ -222,7 +225,7 @@ Our evaluation of this table is consistent with interpretations in the previous 
 
 # Comparison and Recommendation
 
-While we would argue that you should be able to use one package to conduct item analysis, we find that this may not be the case. This can depend on the type of data you have (dichotomous tests or not), and what you are most interested in evaluating.  For our demonstration, we were primarily concerned with 1. How easy it was to use; 2. How much documentation was available; 3. How transparent were the calculations; and 4. How comprehensive were the outputs.
+While we would argue that you should be able to use one package to conduct item analysis, we find that this may not be the case. This can depend on the type of data you have (dichotomous tests or not), and what you are most interested in evaluating. For our demonstration, we were primarily concerned with 1. How easy it was to use; 2. How much documentation was available; 3. How transparent were the calculations; and 4. How comprehensive were the outputs.
 
 # References
 

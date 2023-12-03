@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="software-in-item-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="software-in-item-analysis">Software in Item Analysis&nbsp;</h2>
-<p>Different software is available to conduct this type of analysis, including SPSS, Microsoft Excel, SAS, and others (Gotzmann &amp; Bahry, 2012; Li, 2006).&nbsp; We particularly focus on R statistical programing (R Core Team, 2023), which is a free software used for computing and graphics.&nbsp; One of the many advantages of R is that it is free and open-source and uses packages to conduct different statistical analysis.</p>
+<p>Different software is available to conduct this type of analysis, including SPSS, Microsoft Excel, SAS, and others (Gotzmann &amp; Bahry, 2012; Li, 2006).&nbsp; We particularly focus on R statistical programming (R Core Team, 2023), which is a free software used for computing and graphics.&nbsp; One of the many advantages of R is that it is free and open-source and uses packages to conduct different statistical analysis.</p>
 <p>However, this open framework also means that there are many different options of packages and syntax used to conduct similar analysis, such as item analysis. While there are many R packages out there for conducting an item analysis, the specific functions and returned results are different and documentation outlining the formulas can be difficult to find. <strong>The purpose of this paper is to provide a demonstration of using item analysis in R, demonstrating its use with 3 different packages, and providing recommendations on what packages to use</strong>. &nbsp;</p>
 </section>
 </section>
@@ -174,7 +174,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The data we selected comes from a reasoning test administered to African American students in an urban setting.&nbsp; The test looks at general reasoning skills of children and their understanding about biology, and their understanding of biological phenomena, which is referred to as naïve biology (Waxman, Medin, &amp; Ross, 2007). The data was collected from 133 pre-school and pre-K students.&nbsp; For this demonstration, we focused on 16 questions relating to test-takers performance on an anthropocentric measure (<em>anthro)</em>.&nbsp; The questions are coded as dichotomous items, where 0 is not an anthropocentric response, and 1 is an anthropocentric response. A test takers total score would indicate how many items were correctly identified, for a total possible score of 16. Total scores are included in the dataset.</p>
 <section id="loading-and-cleaning-data" class="level2">
 <h2 class="anchored" data-anchor-id="loading-and-cleaning-data">Loading and Cleaning Data</h2>
-<p>Data was loaded and subset to include only the variables of focus (anthro_1 through anthro_16) using the select() function from the <em>tidyverse</em> package (Wickham et al., 2019). No re-coding or other steps were required to clean the data for this demonstration.</p>
+<p>Data was loaded and subset to include only the variables of focus (anthro_1 through anthro_16) using the <code>select()</code> function from the <em>tidyverse</em> package (Wickham et al., 2019). No re-coding or other steps were required to clean the data for this demonstration.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -195,7 +195,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="summary-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="summary-statistics">Summary Statistics</h2>
-<p>describe(), is function from the <em>psych</em> package, which will be used to demonstrate item analysis below. This was used to produce descriptive statistics to check the data. This function provides a table with a variety of descriptive statistics that are useful in evaluating test items.</p>
+<p><code>describe()</code> is a function from the <em>psych</em> package, which will be used to demonstrate item analysis below. This was used to produce descriptive statistics to check the data. This function provides a table with a variety of descriptive statistics that are useful in evaluating test items.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(child_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -229,7 +229,7 @@ Item_16   16 131 0.47 0.50      0    0.47   0   0   1     1  0.11    -2.00 0.04<
 <h2 class="anchored" data-anchor-id="ctt"><em>CTT</em></h2>
 <section id="load-package" class="level3">
 <h3 class="anchored" data-anchor-id="load-package">Load Package</h3>
-<p>The CTT package was loaded using the library() function. The itemAnalysis() function, part of the <em>CTT</em> package, was used to produce the CTT analyses.</p>
+<p>The CTT package was loaded using the <code>library()</code> function. The <code>itemAnalysis()</code> function, part of the <em>CTT</em> package, was used to produce the CTT analyses.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#if not previously installed, use install.packages()</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages(CTT)</span></span>
@@ -238,7 +238,7 @@ Item_16   16 131 0.47 0.50      0    0.47   0   0   1     1  0.11    -2.00 0.04<
 </section>
 <section id="results" class="level3">
 <h3 class="anchored" data-anchor-id="results">Results</h3>
-<p>In order to view all of the output produced by the itemAnalysis() function, the results need to be stored in an object using the “&lt;-” storage operator from Base R. In this example, we stored the results into an object called “IA.” This object is called again to produce the <strong>Cronbach’s Alpha</strong>, calculated with this package as 0.941.</p>
+<p>In order to view all of the output produced by the <code>itemAnalysis()</code> function, the results need to be stored in an object using the <code>&lt;-</code> storage operator from Base R. In this example, we stored the results into an object called “IA.” This object is called again to produce the <strong>Cronbach’s Alpha</strong>, calculated with this package as 0.941.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>IA <span class="ot">&lt;-</span> <span class="fu">itemAnalysis</span>(child_data, <span class="at">itemReport=</span><span class="cn">TRUE</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>IA</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -340,8 +340,20 @@ Item_16   16 131 0.47 0.50      0    0.47   0   0   1     1  0.11    -2.00 0.04<
 <h2 class="anchored" data-anchor-id="pysch"><em>pysch</em></h2>
 <section id="load-package-1" class="level3">
 <h3 class="anchored" data-anchor-id="load-package-1">Load Package</h3>
-<p>The <em>psych</em> package was loaded using the library() function of Base R.</p>
-<p>Note this package was previously loaded to calculate the summary statistics. We repeat this step here specifically for item analysis.</p>
+<p>The <em>psych</em> package was loaded using the <code>library()</code> function of Base R.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This package was previously loaded to calculate the summary statistics. We repeat this step here specifically for item analysis</p>
+</div>
+</div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#if not previously installed, use install.packages()</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages(psych)</span></span>
@@ -350,7 +362,7 @@ Item_16   16 131 0.47 0.50      0    0.47   0   0   1     1  0.11    -2.00 0.04<
 </section>
 <section id="results-1" class="level3">
 <h3 class="anchored" data-anchor-id="results-1">Results</h3>
-<p>The function alpha() was used to produce a variety of statistics to review the reliability, difficulty, and discrimination of the test items. This function produces five tables of results, which will be described separately.</p>
+<p>The function <code>alpha()</code> was used to produce a variety of statistics to review the reliability, difficulty, and discrimination of the test items. This function produces five tables of results, which will be described separately.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Store results</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>alpha_results <span class="ot">&lt;-</span> <span class="fu">alpha</span>(child_data, <span class="at">warnings =</span> <span class="cn">FALSE</span>)</span>
@@ -513,7 +525,7 @@ Item_16 131 0.7206760 0.7201150 0.7047150 0.6746214 0.4732824 0.5012023</code></
 <h2 class="anchored" data-anchor-id="itemanalysis"><em>ItemAnalysis</em></h2>
 <section id="load-package-2" class="level3">
 <h3 class="anchored" data-anchor-id="load-package-2">Load Package</h3>
-<p>The <em>itemanalysis</em> package was loaded using the library() function of Base R.</p>
+<p>The <em>itemanalysis</em> package was loaded using the <code>library()</code> function of Base R.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages(itemanalysis)</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(itemanalysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -561,7 +573,7 @@ Item_16       0.4732824     0.06702113      0.6746214 0.8462030</code></pre>
 </section>
 <section id="comparison-and-recommendation" class="level1">
 <h1>Comparison and Recommendation</h1>
-<p>While we would argue that you should be able to use one package to conduct item analysis, we find that this may not be the case. This can depend on the type of data you have (dichotomous tests or not), and what you are most interested in evaluating.&nbsp; For our demonstration, we were primarily concerned with 1. How easy it was to use; 2. How much documentation was available; 3. How transparent were the calculations; and 4. How comprehensive were the outputs.</p>
+<p>While we would argue that you should be able to use one package to conduct item analysis, we find that this may not be the case. This can depend on the type of data you have (dichotomous tests or not), and what you are most interested in evaluating.&nbsp;For our demonstration, we were primarily concerned with 1. How easy it was to use; 2. How much documentation was available; 3. How transparent were the calculations; and 4. How comprehensive were the outputs.</p>
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
