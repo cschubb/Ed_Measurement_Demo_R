@@ -1,9 +1,11 @@
 ---
 title: "Classical Test Theory in R"
-format: html
-toc-expand: true
-toc-location: left
-toc-depth: 3
+format:
+  html:
+    toc: true
+    toc-expand: true
+    toc-location: left
+    toc-depth: 3
 editor: visual
 authors: Caroline Sutton Chubb and Hannah Scarbrough 
 ---
@@ -186,7 +188,7 @@ We compare these results with the CTT package for cross-validation, and achieve 
 
 Looking at the Item Stat table, we find that the hardest item was Item 1 (p =0.64), and the easiest was Item 10 (p= 0.32). We see some discrepancy with the item correlation, but achieve similar results as seen in the previous package. *r.drop* is closest to *CTT's* PBis values. We find that Item 1 is an outlier, and may need further investigation.
 
-## ItemAnalysis
+## *ItemAnalysis*
 
 ### Load Package
 
