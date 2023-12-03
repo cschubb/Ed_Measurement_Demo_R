@@ -76,7 +76,7 @@ child_data <- as.data.frame(child_data)
 
 `describe()` is a function from the *psych* package, which will be used to demonstrate item analysis below. This was used to produce descriptive statistics to check the data. This function provides a table with a variety of descriptive statistics that are useful in evaluating test items.
 
-```{r}
+```{r summary-stats}
 library(psych)
 describe(child_data)
 ```
@@ -133,7 +133,7 @@ Looking at the table above, we are able to interpret item discrimination and ite
 
 Item difficulty ranges from 0.33 to 0.64. The easiest item is Item 10 (p=0.328), and the hardest item is Item 1 (p=0.641). The average difficulty is 0.433, which would indicate an easy to moderate difficulty on the overall test.
 
-For item correlation, negative values would indicate that hte item is begatively related to other items and should be discarded or revised. Similarly, low values should also be investigated. Based on this data set, item correlation ranges from 0.20 to 0.796. There are no negative values, but Item 1 is relatively low, with a correlation of 0.20, suggesting that this item needs further investigation from a content expert.
+For item correlation, negative values would indicate that the item is negatively related to other items and should be discarded or revised. Similarly, low values should also be investigated. Based on this data set, item correlation ranges from 0.20 to 0.796. There are no negative values, but Item 1 is relatively low, with a correlation of 0.20, suggesting that this item needs further investigation from a content expert.
 
 Since this package does not specifically calculate discrimination, we infer discrimination by looking at correlation. We would determine that Item 1does not provide sufficient discrimination between test takers. Alternatively, Item 2 is a much better discriminator with a value of 0.69.
 
@@ -169,14 +169,12 @@ We first look at the frequencies of responses for each test item. For example, t
 
 ```{r frequencies}
 alpha_results$response.freq
-
 ```
 
 The second table provides results for the set of test items as a whole. In this case **Cronbach's Alpha** is calculated at 0.9414 (*raw_alpha*) and is described in the documentation as the "alpha based upon the covariances." This table also provides the standardized alpha based on the correlations (*std.alpha*).
 
 ```{r reliability}
 alpha_results$alpha.drop
-
 ```
 
 The table that provides most of the information is item.stats. Correlation is displayed in the *r.cor* column, which looks at the item whole correlation corrected for item overalp and scale reliability, and r.drop, Item whole correlation corrected for item overlap and scale reliability. We can also see the mean (difficulty) of items. We infer discrimination by looking at the correlation of the item score against the total score on the exam.
