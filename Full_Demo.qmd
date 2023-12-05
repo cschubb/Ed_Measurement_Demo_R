@@ -2,7 +2,9 @@
 title: "Classical Test Theory in R"
 format:
   html:
-    theme: journal
+    theme: 
+      light: flatly
+      dark: darkly
     toc: true
     toc-expand: true
     toc-location: left
