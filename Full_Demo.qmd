@@ -139,7 +139,7 @@ For item correlation, negative values would indicate that the item is negatively
 
 Since this package does not specifically calculate discrimination, we infer discrimination by looking at correlation. We would determine that Item 1does not provide sufficient discrimination between test takers. Alternatively, Item 2 is a much better discriminator with a value of 0.69.
 
-## *pysch*
+## *psych*
 
 ### Load Package
 
@@ -217,7 +217,7 @@ span.par=.3, verbose = F)
 item.analysis$item.stat
 ```
 
-In our case, we are interested in looking at the column marked point-biserial. Point-biserial is a special case of the Pearson Correlation and is used when you want to measure the relationship between a continuous variable and a dichotomous variable, or one that has two values (Daines, 2023). This matches our dataset, which only includes 0 and 1, correct and incorrect responses. Krishnan (2013) argues that it can be used to assess item discrimination as it allows for an understanding of the relationship between the score on an item against the whole test. *Itemanalysis* package does not calculate the overall alpha.
+In our case, we are interested in looking at the column marked point-biserial. Point-biserial is a special case of the Pearson Correlation and is used when you want to measure the relationship between a continuous variable and a dichotomous variable, or one that has two values (Daines, 2023). This matches our data set, which only includes 0 and 1, correct and incorrect responses. Krishnan (2013) argues that it can be used to assess item discrimination as it allows for an understanding of the relationship between the score on an item against the whole test. *Itemanalysis* package does not calculate the overall alpha.
 
 ### Interpretation
 
